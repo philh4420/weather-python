@@ -8,7 +8,7 @@
   --border-radius: 12px;
   --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   --text-color: #333333;
-  --header-height: 80px;
+  --header-height: 100px;
   --current-weather-bg: #e3f2fd;
   --forecast-24hr-bg: #f3e5f5;
   --forecast-5day-bg: #e8f5e9;
@@ -20,6 +20,16 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  font-size: 2rem;
 }
 
 body {
@@ -52,13 +62,15 @@ body {
   margin: 0;
   font-size: 2.5em;
   font-weight: 700;
+  padding-top: 40px;
+  padding-bottom: 10px;
 }
 
 .weather-form {
-  margin-top: 10px;
   display: flex;
   justify-content: center;
   gap: 10px;
+  font-size: 1.5rem;
 }
 
 .input-city {
@@ -86,8 +98,7 @@ body {
 }
 
 .weather-container {
-  padding: calc(var(--header-height) + 20px) 20px 40px;
-  /* Adjust padding to accommodate the fixed header */
+  padding: calc(var(--header-height) + 20px) 10px 30px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -116,6 +127,7 @@ body {
   text-align: center;
   transition: transform var(--transition-speed), box-shadow var(--transition-speed);
   border: var(--card-border);
+  font-size: 1.2rem;
 }
 
 .weather-card:hover {
@@ -133,7 +145,7 @@ body {
   padding: 10px;
   text-align: center;
   width: 500px;
-
+  margin-top: 30px;
 }
 
 .weather-icon {
@@ -143,8 +155,9 @@ body {
 }
 
 .weather-icon-small {
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
+  margin-bottom: 20px;
 }
 
 .forecast-grid {
