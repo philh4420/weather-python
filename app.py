@@ -52,7 +52,7 @@ def get_weather():
 def get_place_name(latitude, longitude):
     try:
         openweather_key = os.getenv("OPENWEATHER_KEY")
-        geocode_url = f"http://api.openweathermap.org/geo/1.0/reverse?lat={latitude}&lon={longitude}&limit=1&appid={openweather_key}"
+        geocode_url = f"https://api.openweathermap.org/geo/1.0/reverse?lat={latitude}&lon={longitude}&limit=1&appid={openweather_key}"
         response = requests.get(geocode_url)
         response.raise_for_status()  # Raise an error for bad status codes
         geocode_data = response.json()
@@ -83,9 +83,9 @@ def get_weather_data(city):
 
         # Get current weather and 24-hour forecast from WeatherAPI
         weatherapi_current_url = (
-            f"http://api.weatherapi.com/v1/current.json?key={weatherapi_key}&q={city}"
+            f"https://api.weatherapi.com/v1/current.json?key={weatherapi_key}&q={city}"
         )
-        weatherapi_forecast_url = f"http://api.weatherapi.com/v1/forecast.json?key={weatherapi_key}&q={city}&days=1"
+        weatherapi_forecast_url = f"https://api.weatherapi.com/v1/forecast.json?key={weatherapi_key}&q={city}&days=1"
 
         weatherapi_current_response = requests.get(weatherapi_current_url)
         weatherapi_forecast_response = requests.get(weatherapi_forecast_url)
@@ -144,7 +144,7 @@ def get_weather_data(city):
         }
 
         # Get 5-day weather forecast from OpenWeatherAPI
-        openweather_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={openweather_key}&units=metric"
+        openweather_url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={openweather_key}&units=metric"
         openweather_response = requests.get(openweather_url)
         openweather_response.raise_for_status()
         openweather_data = openweather_response.json()
@@ -171,7 +171,7 @@ def get_weather_data(city):
                     "date": datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y"),
                     "temperature": entry["main"]["temp"],
                     "condition": entry["weather"][0]["description"],
-                    "icon": f"http://openweathermap.org/img/wn/{entry['weather'][0]['icon']}@2x.png",
+                    "icon": f"https://openweathermap.org/img/wn/{entry['weather'][0]['icon']}@2x.png",
                     "humidity": entry["main"]["humidity"],
                     "wind_speed": entry["wind"]["speed"],
                     "feels_like": entry["main"]["feels_like"],
