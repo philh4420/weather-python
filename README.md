@@ -89,10 +89,8 @@ Once you have the API keys, update your `.env` file with the keys as shown above
 
 2. Edit the `.env` file and replace the placeholders with your actual API keys:
 
-    ```plaintext
     WEATHERAPI_KEY=your_weatherapi_key
     OPENWEATHER_KEY=your_openweather_key
-    ```
 
 This will ensure that your API keys are loaded as environment variables and used securely by the application.
 
