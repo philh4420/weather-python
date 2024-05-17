@@ -11,9 +11,5 @@
       "src": "/(.*)",
       "dest": "app.py"
     }
-  ],
-  "env": {
-    "WEATHERAPI_KEY": "weatherapi_key",
-    "OPENWEATHER_KEY": "openweather_key"
-  }
+  ]
 }
