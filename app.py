@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables from .env file if present
 load_dotenv()
 
 app = Flask(__name__)
@@ -78,6 +78,15 @@ def get_weather_data(city):
 
         weatherapi_current_response = requests.get(weatherapi_current_url).json()
         weatherapi_forecast_response = requests.get(weatherapi_forecast_url).json()
+
+        app.logger.info(f"WeatherAPI current response: {weatherapi_current_response}")
+        app.logger.info(f"WeatherAPI forecast response: {weatherapi_forecast_response}")
+
+        if "current" not in weatherapi_current_response:
+            app.logger.error(
+                f"Missing 'current' key in WeatherAPI response: {weatherapi_current_response}"
+            )
+            raise KeyError("Missing 'current' key in WeatherAPI response")
 
         weather_data["WeatherAPI"] = {
             "current": {
