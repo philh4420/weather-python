@@ -53,10 +53,15 @@ def get_place_name(latitude, longitude):
     try:
         openweather_key = os.getenv("OPENWEATHER_KEY")
         geocode_url = f"http://api.openweathermap.org/geo/1.0/reverse?lat={latitude}&lon={longitude}&limit=1&appid={openweather_key}"
-        response = requests.get(geocode_url).json()
-        app.logger.info(f"Geocode response: {response}")
-        if response and isinstance(response, list) and len(response) > 0:
-            return response[0].get("name", "Unknown location")
+        response = requests.get(geocode_url)
+        response.raise_for_status()
+        geocode_data = response.json()
+        app.logger.info(f"Geocode response: {geocode_data}")
+        if geocode_data and isinstance(geocode_data, list) and len(geocode_data) > 0:
+            return geocode_data[0].get("name", "Unknown location")
+        return "Unknown location"
+    except requests.exceptions.RequestException as e:
+        app.logger.error(f"Geocode request failed: {e}")
         return "Unknown location"
     except Exception as e:
         app.logger.error(f"Error in get_place_name: {e}")
@@ -76,35 +81,38 @@ def get_weather_data(city):
         )
         weatherapi_forecast_url = f"http://api.weatherapi.com/v1/forecast.json?key={weatherapi_key}&q={city}&days=1"
 
-        weatherapi_current_response = requests.get(weatherapi_current_url).json()
-        weatherapi_forecast_response = requests.get(weatherapi_forecast_url).json()
+        weatherapi_current_response = requests.get(weatherapi_current_url)
+        weatherapi_forecast_response = requests.get(weatherapi_forecast_url)
 
-        app.logger.info(f"WeatherAPI current response: {weatherapi_current_response}")
-        app.logger.info(f"WeatherAPI forecast response: {weatherapi_forecast_response}")
+        weatherapi_current_response.raise_for_status()
+        weatherapi_forecast_response.raise_for_status()
 
-        if "current" not in weatherapi_current_response:
+        current_weather_data = weatherapi_current_response.json()
+        forecast_weather_data = weatherapi_forecast_response.json()
+
+        app.logger.info(f"WeatherAPI current response: {current_weather_data}")
+        app.logger.info(f"WeatherAPI forecast response: {forecast_weather_data}")
+
+        if "current" not in current_weather_data:
             app.logger.error(
-                f"Missing 'current' key in WeatherAPI response: {weatherapi_current_response}"
+                f"Missing 'current' key in WeatherAPI response: {current_weather_data}"
             )
             raise KeyError("Missing 'current' key in WeatherAPI response")
 
         weather_data["WeatherAPI"] = {
             "current": {
-                "temperature": weatherapi_current_response["current"]["temp_c"],
-                "condition": weatherapi_current_response["current"]["condition"][
-                    "text"
-                ],
-                "icon": weatherapi_current_response["current"]["condition"]["icon"],
-                "humidity": weatherapi_current_response["current"]["humidity"],
-                "wind_speed": weatherapi_current_response["current"]["wind_kph"],
-                "feels_like": weatherapi_current_response["current"]["feelslike_c"],
-                "visibility": weatherapi_current_response["current"]["vis_km"],
-                "uv_index": weatherapi_current_response["current"]["uv"],
-                "pressure": weatherapi_current_response["current"]["pressure_mb"],
-                "cloud": weatherapi_current_response["current"]["cloud"],
+                "temperature": current_weather_data["current"]["temp_c"],
+                "condition": current_weather_data["current"]["condition"]["text"],
+                "icon": current_weather_data["current"]["condition"]["icon"],
+                "humidity": current_weather_data["current"]["humidity"],
+                "wind_speed": current_weather_data["current"]["wind_kph"],
+                "feels_like": current_weather_data["current"]["feelslike_c"],
+                "visibility": current_weather_data["current"]["vis_km"],
+                "uv_index": current_weather_data["current"]["uv"],
+                "pressure": current_weather_data["current"]["pressure_mb"],
+                "cloud": current_weather_data["current"]["cloud"],
                 "date_time": datetime.strptime(
-                    weatherapi_current_response["location"]["localtime"],
-                    "%Y-%m-%d %H:%M",
+                    current_weather_data["location"]["localtime"], "%Y-%m-%d %H:%M"
                 ).strftime("%d/%m/%Y %H:%M"),
             },
             "forecast": [
@@ -123,7 +131,7 @@ def get_weather_data(city):
                     "pressure": hour["pressure_mb"],
                     "cloud": hour["cloud"],
                 }
-                for hour in weatherapi_forecast_response.get("forecast", {})
+                for hour in forecast_weather_data.get("forecast", {})
                 .get("forecastday", [])[0]
                 .get("hour", [])
             ],
@@ -131,11 +139,13 @@ def get_weather_data(city):
 
         # Get 5-day weather forecast from OpenWeatherAPI
         openweather_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={openweather_key}&units=metric"
-        openweather_response = requests.get(openweather_url).json()
+        openweather_response = requests.get(openweather_url)
+        openweather_response.raise_for_status()
+        openweather_data = openweather_response.json()
 
         openweather_forecast = []
-        if "list" in openweather_response:
-            forecast_entries = openweather_response["list"]
+        if "list" in openweather_data:
+            forecast_entries = openweather_data["list"]
             daily_forecasts = {}
 
             for entry in forecast_entries:
@@ -172,6 +182,9 @@ def get_weather_data(city):
         }
 
         return weather_data
+    except requests.exceptions.RequestException as e:
+        app.logger.error(f"Weather data request failed: {e}")
+        return {}
     except Exception as e:
         app.logger.error(f"Error in get_weather_data: {e}")
         return {}
