@@ -83,15 +83,9 @@ The application uses two external APIs: WeatherAPI and OpenWeatherAPI. You need 
 
 Once you have the API keys, update your `.env` file with the keys as shown above.
 
-## Explanation of .env_dummy
+## Explanation of .env
 
-The `.env_dummy` file is a template for your `.env` file. It contains placeholders for the API keys required by the application. To set up your environment:
-
-1. Copy `.env_dummy` to `.env`:
-
-    ```bash
-    cp .env_dummy .env
-    ```
+1. Create `.env`:
 
 2. Edit the `.env` file and replace the placeholders with your actual API keys:
 
