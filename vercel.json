@@ -13,7 +13,7 @@
     }
   ],
   "env": {
-    "WEATHERAPI_KEY": "@weatherapi_key",
-    "OPENWEATHER_KEY": "@openweather_key"
+    "WEATHERAPI_KEY": "weatherapi_key",
+    "OPENWEATHER_KEY": "openweather_key"
   }
 }
