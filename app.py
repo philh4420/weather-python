@@ -9,6 +9,8 @@ load_dotenv()
 
 app = Flask(__name__)
 
+IPINFO_TOKEN = os.getenv("IPINFO_TOKEN")
+
 
 @app.route("/")
 def home():
@@ -29,8 +31,8 @@ def get_weather():
             location = city
             place_name = city
         else:
-            location = "London"  # default location
-            place_name = "London"
+            place_name = get_place_name_by_ip(request.remote_addr)
+            location = place_name  # Use place_name as the location in this case
 
         weather_data = get_weather_data(
             place_name
@@ -52,9 +54,9 @@ def get_weather():
 def get_place_name(latitude, longitude):
     try:
         openweather_key = os.getenv("OPENWEATHER_KEY")
-        geocode_url = f"https://api.openweathermap.org/geo/1.0/reverse?lat={latitude}&lon={longitude}&limit=1&appid={openweather_key}"
+        geocode_url = f"http://api.openweathermap.org/geo/1.0/reverse?lat={latitude}&lon={longitude}&limit=1&appid={openweather_key}"
         response = requests.get(geocode_url)
-        response.raise_for_status()  # Raise an error for bad status codes
+        response.raise_for_status()
         geocode_data = response.json()
         app.logger.info(f"Geocode response: {geocode_data}")
 
@@ -74,6 +76,26 @@ def get_place_name(latitude, longitude):
         return "Unknown location"
 
 
+def get_place_name_by_ip(ip_address):
+    try:
+        ipinfo_url = f"http://ipinfo.io/{ip_address}/json?token={IPINFO_TOKEN}"
+        response = requests.get(ipinfo_url)
+        response.raise_for_status()
+        ipinfo_data = response.json()
+        app.logger.info(f"IPInfo response: {ipinfo_data}")
+
+        return ipinfo_data.get(
+            "city", "London"
+        )  # Default to London if city is not available
+
+    except requests.exceptions.RequestException as e:
+        app.logger.error(f"IPInfo request failed: {e}")
+        return "London"  # Default to London on error
+    except Exception as e:
+        app.logger.error(f"Error in get_place_name_by_ip: {e}")
+        return "London"  # Default to London on error
+
+
 def get_weather_data(city):
     try:
         weather_data = {}
@@ -83,9 +105,9 @@ def get_weather_data(city):
 
         # Get current weather and 24-hour forecast from WeatherAPI
         weatherapi_current_url = (
-            f"https://api.weatherapi.com/v1/current.json?key={weatherapi_key}&q={city}"
+            f"http://api.weatherapi.com/v1/current.json?key={weatherapi_key}&q={city}"
         )
-        weatherapi_forecast_url = f"https://api.weatherapi.com/v1/forecast.json?key={weatherapi_key}&q={city}&days=1"
+        weatherapi_forecast_url = f"http://api.weatherapi.com/v1/forecast.json?key={weatherapi_key}&q={city}&days=1"
 
         weatherapi_current_response = requests.get(weatherapi_current_url)
         weatherapi_forecast_response = requests.get(weatherapi_forecast_url)
@@ -144,7 +166,7 @@ def get_weather_data(city):
         }
 
         # Get 5-day weather forecast from OpenWeatherAPI
-        openweather_url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={openweather_key}&units=metric"
+        openweather_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={openweather_key}&units=metric"
         openweather_response = requests.get(openweather_url)
         openweather_response.raise_for_status()
         openweather_data = openweather_response.json()
@@ -171,7 +193,7 @@ def get_weather_data(city):
                     "date": datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y"),
                     "temperature": entry["main"]["temp"],
                     "condition": entry["weather"][0]["description"],
-                    "icon": f"https://openweathermap.org/img/wn/{entry['weather'][0]['icon']}@2x.png",
+                    "icon": f"http://openweathermap.org/img/wn/{entry['weather'][0]['icon']}@2x.png",
                     "humidity": entry["main"]["humidity"],
                     "wind_speed": entry["wind"]["speed"],
                     "feels_like": entry["main"]["feels_like"],
