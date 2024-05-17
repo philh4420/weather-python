@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <header class="header">
+        <h1 class="title">Weather App</h1>
+        <form action="/weather" method="post" class="weather-form">
+            <input type="text" name="city" class="input-city" placeholder="Enter city" required>
+            <button type="submit" class="btn">Get Weather</button>
+        </form>
+    </header>
+
+    <main class="weather-container">
+        <div id="weather-data">
+            {% if weather %}
+                {% include 'weather_data.html' %}
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

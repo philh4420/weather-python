@@ -1,0 +1,71 @@
+<div class="weather-data">
+    <h2 class="weather-header">Weather in {{ city }}</h2>
+    <div class="weather-bento">
+        <!-- WeatherAPI Current Weather -->
+        <div class="weather-card current-weather">
+            <h3>Current Weather</h3>
+            <div class="card-content">
+                <img src="{{ weather['WeatherAPI']['current']['icon'] }}" alt="Weather icon" class="weather-icon">
+                <ul>
+                    <li>Temperature: {{ weather['WeatherAPI']['current']['temperature'] }}°C</li>
+                    <li>Condition: {{ weather['WeatherAPI']['current']['condition'] }}</li>
+                    <li>Humidity: {{ weather['WeatherAPI']['current']['humidity'] }}%</li>
+                    <li>Wind Speed: {{ weather['WeatherAPI']['current']['wind_speed'] }} kph</li>
+                    <li>Feels Like: {{ weather['WeatherAPI']['current']['feels_like'] }}°C</li>
+                    <li>Visibility: {{ weather['WeatherAPI']['current']['visibility'] }} km</li>
+                    <li>UV Index: {{ weather['WeatherAPI']['current']['uv_index'] }}</li>
+                    <li>Pressure: {{ weather['WeatherAPI']['current']['pressure'] }} hPa</li>
+                    <li>Cloud Cover: {{ weather['WeatherAPI']['current']['cloud'] }}%</li>
+                    <li>Date/Time: {{ weather['WeatherAPI']['current']['date_time'] }}</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- WeatherAPI 24-Hour Forecast -->
+        <div class="weather-card forecast-24hr">
+            <h3>24-Hour Forecast</h3>
+            <div class="card-content forecast-grid">
+                {% for hour in weather['WeatherAPI']['forecast'] %}
+                    <div class="forecast-card">
+                        <ul>
+                            <li>Time: {{ hour['time'] }}</li>
+                            <li>Temperature: {{ hour['temperature'] }}°C</li>
+                            <li>Condition: {{ hour['condition'] }}</li>
+                            <li>Humidity: {{ hour['humidity'] }}%</li>
+                            <li>Wind Speed: {{ hour['wind_speed'] }} kph</li>
+                            <li>Feels Like: {{ hour['feels_like'] }}°C</li>
+                            <li>Visibility: {{ hour['visibility'] }} km</li>
+                            <li>UV Index: {{ hour['uv_index'] }}</li>
+                            <li>Pressure: {{ hour['pressure'] }} hPa</li>
+                            <li>Cloud Cover: {{ hour['cloud'] }}%</li>
+                        </ul>
+                        <img src="{{ hour['icon'] }}" alt="Weather icon" class="weather-icon-small">
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- OpenWeatherAPI 5-Day Forecast -->
+        <div class="weather-card forecast-5day">
+            <h3>5-Day Forecast</h3>
+            <div class="card-content forecast-grid">
+                {% for forecast in weather['OpenWeatherAPI']['forecast'] %}
+                    <div class="forecast-card">
+                        <ul>
+                            <li>Date: {{ forecast['date'] }}</li>
+                            <li>Temperature: {{ forecast['temperature'] }}°C</li>
+                            <li>Condition: {{ forecast['condition'] }}</li>
+                            <li>Humidity: {{ forecast['humidity'] }}%</li>
+                            <li>Wind Speed: {{ forecast['wind_speed'] }} kph</li>
+                            <li>Feels Like: {{ forecast['feels_like'] }}°C</li>
+                            <li>Visibility: {{ forecast['visibility'] }} km</li>
+                            <li>Pressure: {{ forecast['pressure'] }} hPa</li>
+                            <li>Cloud Cover: {{ forecast['cloud'] }}%</li>
+                        </ul>
+                        <img src="{{ forecast['icon'] }}" alt="Weather icon" class="weather-icon-small">
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

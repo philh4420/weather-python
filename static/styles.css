@@ -1,0 +1,208 @@
+/* styles.css */
+:root {
+  --primary-color: #1d1d1f;
+  --secondary-color: #0071e3;
+  --background-color: #f5f5f7;
+  --card-background-color: #ffffff;
+  --font-family: 'Roboto', sans-serif;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --text-color: #333333;
+  --header-height: 80px;
+  --current-weather-bg: #e3f2fd;
+  --forecast-24hr-bg: #f3e5f5;
+  --forecast-5day-bg: #e8f5e9;
+  --card-border: 2px solid rgba(0, 0, 0, 0.05);
+  --transition-speed: 0.3s;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--background-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.header {
+  width: 100%;
+  background: var(--primary-color);
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  height: var(--header-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 2.5em;
+  font-weight: 700;
+}
+
+.weather-form {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.input-city {
+  padding: 10px;
+  font-size: 1em;
+  border: none;
+  border-radius: var(--border-radius);
+  outline: none;
+  width: 60%;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 1em;
+  color: #fff;
+  background: var(--secondary-color);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background var(--transition-speed);
+}
+
+.btn:hover {
+  background: #005bb5;
+}
+
+.weather-container {
+  padding: calc(var(--header-height) + 20px) 20px 40px;
+  /* Adjust padding to accommodate the fixed header */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: var(--header-height);
+}
+
+.weather-header {
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.weather-bento {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(2400px, 1fr));
+  gap: 40px;
+  width: 100%;
+}
+
+.weather-card {
+  background: var(--card-background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 20px;
+  text-align: center;
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+  border: var(--card-border);
+}
+
+.weather-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--card-background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 10px;
+  text-align: center;
+  width: 500px;
+
+}
+
+.weather-icon {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+.weather-icon-small {
+  width: 50px;
+  height: 50px;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.forecast-card {
+  background: var(--card-background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 10px;
+  text-align: center;
+}
+
+/* Specific styling for current-weather, forecast-24hr, and forecast-5day */
+.current-weather,
+.forecast-24hr,
+.forecast-5day {
+  width: 100%;
+  max-width: none;
+}
+
+.current-weather {
+  background: var(--current-weather-bg);
+  border: 2px solid #90caf9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.forecast-24hr {
+  background: var(--forecast-24hr-bg);
+  border: 2px solid #ce93d8;
+}
+
+.forecast-5day {
+  background: var(--forecast-5day-bg);
+  border: 2px solid #a5d6a7;
+}
+
+/* Hover effects for specific weather cards */
+.current-weather:hover,
+.forecast-24hr:hover,
+.forecast-5day:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Additional styling for ul and li elements */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 5px 0;
+  font-size: 1.1em;
+}
