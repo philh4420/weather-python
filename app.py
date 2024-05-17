@@ -54,7 +54,8 @@ def get_place_name(latitude, longitude):
         openweather_key = os.getenv("OPENWEATHER_KEY")
         geocode_url = f"http://api.openweathermap.org/geo/1.0/reverse?lat={latitude}&lon={longitude}&limit=1&appid={openweather_key}"
         response = requests.get(geocode_url).json()
-        if response:
+        app.logger.info(f"Geocode response: {response}")
+        if response and isinstance(response, list) and len(response) > 0:
             return response[0].get("name", "Unknown location")
         return "Unknown location"
     except Exception as e:
